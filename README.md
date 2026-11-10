@@ -13,7 +13,8 @@ See [dataset and weight setup](DATASET_AND_WEIGHTS.md) after cloning.
 
 [Open the prepared Colab notebook](https://colab.research.google.com/github/snehav-Unique/SMPS_MODEL/blob/main/notebooks/SMPS_T4_Efficiency_Benchmark.ipynb).
 Select a T4 GPU and run all cells, then download the measured-results ZIP.
-See [benchmark protocol and status](T4_BENCHMARK.md). T4 results are pending execution.
+See [benchmark protocol and results](T4_BENCHMARK.md). Three measured Tesla T4 runs
+finished in 56.74–77.66 seconds (median 60.36 seconds), all below five minutes.
 
 ## Project Structure
 

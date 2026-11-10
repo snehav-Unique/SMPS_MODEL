@@ -1,6 +1,8 @@
 # T4 efficiency benchmark
 
-**Status: prepared; no NVIDIA T4 measurements have been collected yet.** The development computer has CPU-only PyTorch and no accessible NVIDIA GPU.
+**Status: measured on Tesla T4; supplied Colab evidence verified.** Three full 3,000-image runs took 77.66, 60.36, and 56.74 seconds. Median end-to-end runtime is **60.36 seconds**, and all runs were below five minutes. Median-run throughput is **49.70 images/sec**. Peak PyTorch allocated memory was **561.9 MiB**, and peak reserved memory was **944 MiB**.
+
+[Measured report](outputs/efficiency_t4/REPORT.md), [summary table](outputs/efficiency_t4/summary.csv), and [verification evidence](outputs/efficiency_t4/verification.json). Script/checkpoint hashes, image IDs, run completeness, and supplied timings were checked locally; this was not an independent GPU rerun. The original single-model submission CLI still requires alignment with the measured ensemble pipeline.
 
 Open [the Colab notebook](https://colab.research.google.com/github/snehav-Unique/SMPS_MODEL/blob/main/notebooks/SMPS_T4_Efficiency_Benchmark.ipynb), select a T4 GPU runtime, and run all cells. The notebook downloads and verifies the committed dataset and four model checkpoints through Git LFS, runs three independent measurements, and downloads a ZIP of the results. It refuses CPU and non-T4 devices.
 

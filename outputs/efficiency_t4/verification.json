@@ -1,0 +1,33 @@
+{
+  "status": "passed",
+  "script_matches_committed_source": true,
+  "all_four_weight_hashes_match": true,
+  "all_test_ids_match_original_dataset": true,
+  "runs": [
+    {
+      "run": 1,
+      "predictions": 3000,
+      "profiled_batches": 188,
+      "wall_seconds": 77.65544198399999,
+      "max_gpu_batch_ms": 7765.4775390625
+    },
+    {
+      "run": 2,
+      "predictions": 3000,
+      "profiled_batches": 188,
+      "wall_seconds": 60.35704892399997,
+      "max_gpu_batch_ms": 3914.41845703125
+    },
+    {
+      "run": 3,
+      "predictions": 3000,
+      "profiled_batches": 188,
+      "wall_seconds": 56.73557146300004,
+      "max_gpu_batch_ms": 3036.394775390625
+    }
+  ],
+  "max_probability_difference_between_runs": 0.000750739999999972,
+  "median_wall_seconds": 60.35704892399997,
+  "all_runs_under_300_seconds": true,
+  "limitation": "Verification checks internal consistency of supplied evidence; it is not an independent GPU rerun."
+}

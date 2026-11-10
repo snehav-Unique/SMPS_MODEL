@@ -1,0 +1,34 @@
+{
+  "status": "complete",
+  "gpu": "Tesla T4",
+  "runs": 3,
+  "weights": [
+    {
+      "model": "efficientnetv2_s",
+      "weight": 0.35,
+      "path": "efficientnetv2_s_results/efficientnetv2_s_results/efficientnetv2_s_best.pth",
+      "sha256": "3e5a3858cd40f22bfb885fd99aaedeff1c049ad720a49755e5e8d15a406d5b6e"
+    },
+    {
+      "model": "convnext_tiny",
+      "weight": 0.3,
+      "path": "weights/convnext_tiny_best.pth",
+      "sha256": "6165cde373bea423bc3da6e4d24d85f0b13bc44ee0bfcfff9b9f96dedfe18d3e"
+    },
+    {
+      "model": "swin_tiny",
+      "weight": 0.2,
+      "path": "swin_results/swin_results/swin_tiny_best.pth",
+      "sha256": "c45de824da9aa780f67b3ca597ed7a9352d6b957ce7cd825cb1f3b29019d02f3"
+    },
+    {
+      "model": "densenet121",
+      "weight": 0.15,
+      "path": "densenet121_results/densenet121_results/densenet121_best.pth",
+      "sha256": "683de13e7980c6e1365f877ee58ca81ed43f8e1ed87d0281f2f51f21d19bdc9e"
+    }
+  ],
+  "script_sha256": "1a246027aa19caa62f9f3ede15890baecfe9906d01010b03f6127678c978ffb6",
+  "utc": "2026-11-10T11:58:56.761393+00:00",
+  "git_commit": "47f8b113ec5dd2485aa33a1c776eba123ae6ee25"
+}

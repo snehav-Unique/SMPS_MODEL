@@ -1,0 +1,5 @@
+model,seconds_including_load_and_loader_wait,peak_allocated_mib,peak_reserved_mib
+efficientnetv2_s,15.739001410000014,463.642578125,530.0
+convnext_tiny,14.502837780999982,508.40234375,764.0
+swin_tiny,11.834925016,561.86767578125,944.0
+densenet121,12.170606563999968,481.35986328125,626.0
