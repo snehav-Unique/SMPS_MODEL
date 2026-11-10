@@ -1,5 +1,5 @@
 # Deepfake Detection — IIIT Bangalore Hackathon
-# Team: [TeamName]
+# Team: SMPS
 
 ## Completed robustness evaluation
 
