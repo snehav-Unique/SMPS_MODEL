@@ -20,7 +20,7 @@ All four observed drops are below 0.02. Confidence intervals for blur and noise 
 
 ## Local assets
 
-Dataset images and trained model checkpoints are excluded from Git. Obtain the participant dataset and original trained weights separately. The exact checkpoint paths are defined in `robustness_test.py`, and their SHA-256 hashes are recorded in `outputs/robustness/run_manifest.json`.
+The complete participant dataset archive and original trained model checkpoints are tracked with Git LFS. Run `git lfs pull` after cloning; see [dataset and weight setup](DATASET_AND_WEIGHTS.md). The exact checkpoint paths are defined in `robustness_test.py`, and their SHA-256 hashes are recorded in `outputs/robustness/run_manifest.json`.
 
 The scripts expect the participant package beside this project directory, containing `hackathon_dataset.zip` or an extracted dataset with `train_metadata.csv`. `config.py` also contains the original author's dataset path; update it before using the original training scripts.
 

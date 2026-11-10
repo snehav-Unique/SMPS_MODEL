@@ -1,0 +1,46 @@
+{
+  "assets": [
+    {
+      "path": "datasets/hackathon_dataset.zip",
+      "bytes": 133274437,
+      "sha256": "3fa8ff24720524a182a4cc449bb56f2ee48a588d04e442a8c3cd93a7089dc08e"
+    },
+    {
+      "path": "convnext_results/convnext_results/convnext_tiny_best.pth",
+      "bytes": 111355879,
+      "sha256": "6165cde373bea423bc3da6e4d24d85f0b13bc44ee0bfcfff9b9f96dedfe18d3e"
+    },
+    {
+      "path": "densenet121_results/densenet121_results/densenet121_best.pth",
+      "bytes": 28439894,
+      "sha256": "683de13e7980c6e1365f877ee58ca81ed43f8e1ed87d0281f2f51f21d19bdc9e"
+    },
+    {
+      "path": "efficientnetv2_s_results/efficientnetv2_s_results/efficientnetv2_s_best.pth",
+      "bytes": 81617723,
+      "sha256": "3e5a3858cd40f22bfb885fd99aaedeff1c049ad720a49755e5e8d15a406d5b6e"
+    },
+    {
+      "path": "eva02_tiny_results/eva02_tiny_results/eva02_tiny_best.pth",
+      "bytes": 22072199,
+      "sha256": "b136e1b44e38952f7b2ec35b855b6703122d219b5fee0f5cd9f580878c03aee6"
+    },
+    {
+      "path": "swin_results/swin_results/swin_tiny_best.pth",
+      "bytes": 110149322,
+      "sha256": "c45de824da9aa780f67b3ca597ed7a9352d6b957ce7cd825cb1f3b29019d02f3"
+    },
+    {
+      "path": "weights/best_model.pth",
+      "bytes": 70959827,
+      "sha256": "e8f590e970ca4fc0f545b8b2656d4faab631c6aea62e4516cf47983a3ae9c6c6"
+    },
+    {
+      "path": "weights/convnext_tiny_best.pth",
+      "bytes": 111355879,
+      "sha256": "6165cde373bea423bc3da6e4d24d85f0b13bc44ee0bfcfff9b9f96dedfe18d3e"
+    }
+  ],
+  "dataset_archive_entries": 10002,
+  "dataset_archive_integrity": "passed"
+}

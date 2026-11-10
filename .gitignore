@@ -1,13 +1,6 @@
-# Local datasets, archives, and model checkpoints
-*.pth
-*.pt
-*.ckpt
-*.onnx
-*.zip
-*.7z
-*.rar
+# Extracted local datasets (complete archive is tracked with Git LFS)
 hackathon_dataset/
-datasets/
+datasets/extracted/
 
 # Python and local environments
 __pycache__/

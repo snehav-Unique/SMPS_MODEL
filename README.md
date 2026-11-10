@@ -6,7 +6,8 @@
 See [robustness results and reproduction instructions](ROBUSTNESS.md), the
 [full statistics report](outputs/robustness/REPORT.md), and
 [completed checkpoints](outputs/robustness/CHECKPOINTS.md).
-Dataset images and model checkpoints are kept outside Git; obtain them separately.
+Dataset archive and model checkpoints are stored with Git LFS.
+See [dataset and weight setup](DATASET_AND_WEIGHTS.md) after cloning.
 
 ## Project Structure
 
