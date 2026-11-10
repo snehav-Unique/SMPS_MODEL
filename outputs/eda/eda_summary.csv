@@ -1,0 +1,2 @@
+total_train,real_count,fake_count,test_count,corrupted_count,dataset_mean_R,dataset_mean_G,dataset_mean_B,dataset_std_R,dataset_std_G,dataset_std_B
+7000,3478,3522,3000,0,0.5134971737861633,0.44399312138557434,0.4066520631313324,0.22654463350772858,0.2058873325586319,0.1976337730884552

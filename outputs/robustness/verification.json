@@ -1,0 +1,9 @@
+{
+  "dense_runtime_consistency_max_probability_difference": 1.1920928943975895e-07,
+  "tolerance": 1e-05,
+  "checked_original_batch_images": 2,
+  "model_prediction_files_verified": 20,
+  "ensemble_prediction_files_verified": 5,
+  "images_per_file": 200,
+  "ensemble_weights_verified": true
+}

@@ -1,0 +1,29 @@
+# Local datasets, archives, and model checkpoints
+*.pth
+*.pt
+*.ckpt
+*.onnx
+*.zip
+*.7z
+*.rar
+hackathon_dataset/
+datasets/
+
+# Python and local environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Credentials and machine-specific files
+.env
+.env.*
+!.env.example
+.aws/
+.DS_Store
+Thumbs.db
+
+# Interrupted atomic writes
+*.tmp

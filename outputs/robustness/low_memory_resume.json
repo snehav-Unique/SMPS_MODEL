@@ -1,0 +1,14 @@
+{
+  "model": "densenet121",
+  "batch_size": 2,
+  "threads": 2,
+  "layout": "contiguous_nchw",
+  "device": "cpu",
+  "precision": "float32",
+  "mkldnn": true,
+  "flush_denormal": true,
+  "script_sha256": "e9ecc32d388c3563872f1871f41ec8ac180b37988c995668e2b641ca93d0329d",
+  "note": "Earlier DenseNet batches retained; same preprocessing and original+flip TTA.",
+  "executed_script_sha256": "ee9bf5ec982b0fbc8b0f8599784010397b60c6c0b23b60e0907fa606e45af998",
+  "metadata_correction": "Thread count corrected to 2 to match torch.set_num_threads and progress.jsonl; source change only corrects this metadata field."
+}
