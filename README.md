@@ -9,6 +9,12 @@ See [robustness results and reproduction instructions](ROBUSTNESS.md), the
 Dataset archive and model checkpoints are stored with Git LFS.
 See [dataset and weight setup](DATASET_AND_WEIGHTS.md) after cloning.
 
+## T4 efficiency benchmark
+
+[Open the prepared Colab notebook](https://colab.research.google.com/github/snehav-Unique/SMPS_MODEL/blob/main/notebooks/SMPS_T4_Efficiency_Benchmark.ipynb).
+Select a T4 GPU and run all cells, then download the measured-results ZIP.
+See [benchmark protocol and status](T4_BENCHMARK.md). T4 results are pending execution.
+
 ## Project Structure
 
 ```
