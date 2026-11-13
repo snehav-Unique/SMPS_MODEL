@@ -174,7 +174,7 @@ def main(args):
         plt.savefig(save_path, dpi=100, bbox_inches="tight")
         plt.close()
 
-        print(f"  [{i+1:3d}/{len(sample_paths)}] {label} conf={prob:.3f} → {save_path.name}")
+        print(f"  [{i+1:3d}/{len(sample_paths)}] {label} conf={prob:.3f} -> {save_path.name}")
 
     print(f"\n[DONE] Grad-CAM visualizations saved to: {GRADCAM_DIR}")
 
