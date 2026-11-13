@@ -17,7 +17,7 @@ Optional flags:
     --fp16         Use FP16 inference (faster on T4, default: enabled if CUDA)
     --tta          Use test-time augmentation (3x slower but potentially better AUC)
 
-All paths are via CLI arguments — no hardcoded paths (required by hackathon rules).
+All paths are via CLI arguments - no hardcoded paths (required by hackathon rules).
 """
 
 import os
@@ -34,12 +34,12 @@ from torchvision import transforms
 from PIL import Image
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 # CONSTANTS (overrideable via CLI)
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 IMAGE_SIZE   = 224
 BATCH_SIZE   = 64
-# Windows: num_workers>0 with DataLoader requires spawn context — safe inside
+# Windows: num_workers>0 with DataLoader requires spawn context - safe inside
 # __main__ guard. Set to 0 on CPU to avoid overhead; GPU gets full workers.
 NUM_WORKERS  = 4 if torch.cuda.is_available() else 0
 THRESHOLD    = 0.5
@@ -50,9 +50,9 @@ IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD  = [0.229, 0.224, 0.225]
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# DATASET — Flat directory of test images, no labels
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
+# DATASET - Flat directory of test images, no labels
+# -----------------------------------------------------------------------------
 class TestDataset(Dataset):
     def __init__(self, image_dir: str, transform=None):
         self.image_dir = Path(image_dir)
@@ -86,9 +86,9 @@ class TestDataset(Dataset):
         return img, image_id
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# MODEL — Architecture must match what was trained
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
+# MODEL - Architecture must match what was trained
+# -----------------------------------------------------------------------------
 def build_model(backbone: str) -> nn.Module:
     """Build the model architecture (without loading weights)."""
 
@@ -117,10 +117,31 @@ def build_model(backbone: str) -> nn.Module:
         except ImportError:
             raise ImportError("timm is required for convnext_tiny. Run: pip install timm")
 
-    elif backbone == "efficientnetv2_s":
+    elif backbone in ("efficientnetv2_s", "tf_efficientnetv2_s"):
         try:
             import timm
             model = timm.create_model("tf_efficientnetv2_s", pretrained=False, num_classes=1)
+        except ImportError:
+            raise ImportError("timm is required. Run: pip install timm")
+
+    elif backbone in ("swin_tiny", "swin_tiny_patch4_window7_224"):
+        try:
+            import timm
+            model = timm.create_model("swin_tiny_patch4_window7_224", pretrained=False, num_classes=1)
+        except ImportError:
+            raise ImportError("timm is required. Run: pip install timm")
+
+    elif backbone == "densenet121":
+        try:
+            import timm
+            model = timm.create_model("densenet121", pretrained=False, num_classes=1)
+        except ImportError:
+            raise ImportError("timm is required. Run: pip install timm")
+
+    elif backbone in ("maxvit_tiny", "maxvit_tiny_tf_224"):
+        try:
+            import timm
+            model = timm.create_model("maxvit_tiny_tf_224", pretrained=False, num_classes=1)
         except ImportError:
             raise ImportError("timm is required. Run: pip install timm")
 
@@ -130,12 +151,96 @@ def build_model(backbone: str) -> nn.Module:
     return model
 
 
-def load_model(weights_path: str, backbone: str, device: str) -> nn.Module:
-    """Load model and weights onto device."""
+class EnsembleRunner:
+    """Wrapper that runs the multi-model ensemble with horizontal-flip TTA."""
+    def __init__(self, models_and_weights, device):
+        self.models_and_weights = models_and_weights
+        self.device = device
+
+    def to(self, device):
+        for m, _ in self.models_and_weights:
+            m.to(device)
+        self.device = device
+        return self
+
+    def eval(self):
+        for m, _ in self.models_and_weights:
+            m.eval()
+        return self
+
+    def half(self):
+        for m, _ in self.models_and_weights:
+            m.half()
+        return self
+
+    def __call__(self, x):
+        total = None
+        for model, weight in self.models_and_weights:
+            p = (
+                torch.sigmoid(model(x)).squeeze(-1) +
+                torch.sigmoid(model(x.flip(-1))).squeeze(-1)
+            ) / 2.0
+            if total is None:
+                total = weight * p
+            else:
+                total = total + weight * p
+        return total
+
+
+def load_model(weights_path: str, backbone: str, device: str):
+    """Load model and weights onto device (supports single model, JSON config, or ensemble bundle)."""
+    import json
+    w_path = Path(weights_path)
+
+    # Check if directory or JSON config
+    if w_path.is_dir():
+        config_file = w_path / "ensemble_config.json"
+        if config_file.exists():
+            w_path = config_file
+        else:
+            pths = sorted(list(w_path.glob("*.pth")))
+            if pths:
+                w_path = pths[0]
+            else:
+                raise FileNotFoundError(f"No model checkpoint or ensemble_config.json found in {weights_path}")
+
+    if w_path.suffix.lower() == ".json":
+        with open(w_path, "r", encoding="utf-8") as f:
+            cfg = json.load(f)
+        print(f"[INFO] Loading Super-Ensemble ({len(cfg['models'])} models) via {w_path.name} on {device} ...")
+        models_and_weights = []
+        base_dir = w_path.parent
+        for m_info in cfg["models"]:
+            m = build_model(m_info["arch"])
+            m_pth = base_dir / m_info["file"]
+            state = torch.load(m_pth, map_location=device)
+            if isinstance(state, dict) and "state_dict" in state:
+                state = state["state_dict"]
+            elif isinstance(state, dict) and "model" in state:
+                state = state["model"]
+            m.load_state_dict(state)
+            m.to(device)
+            m.eval()
+            models_and_weights.append((m, m_info["weight"]))
+            print(f"  Loaded {m_info['name']} ({m_info['arch']}) with weight {m_info['weight']}")
+        return EnsembleRunner(models_and_weights, device)
+
+    state = torch.load(w_path, map_location=device)
+
+    if isinstance(state, dict) and state.get("is_ensemble"):
+        print(f"[INFO] Detected unified ensemble bundle with {len(state['models'])} models from {weights_path}")
+        models_and_weights = []
+        for (name, arch), weight in zip(state["models"], state["weights"]):
+            m = build_model(arch)
+            s = state["state_dicts"][name]
+            m.load_state_dict(s)
+            m.to(device)
+            m.eval()
+            models_and_weights.append((m, weight))
+            print(f"  Loaded ensemble model {name} ({arch}) with weight {weight}")
+        return EnsembleRunner(models_and_weights, device)
+
     model = build_model(backbone)
-
-    state = torch.load(weights_path, map_location=device)
-
     if isinstance(state, dict) and "state_dict" in state:
         model.load_state_dict(state["state_dict"])
     elif isinstance(state, dict) and "model" in state:
@@ -151,11 +256,11 @@ def load_model(weights_path: str, backbone: str, device: str) -> nn.Module:
     return model
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# TRANSFORMS — MUST match val/inference transforms used during training
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
+# TRANSFORMS - MUST match val/inference transforms used during training
+# -----------------------------------------------------------------------------
 def get_inference_transforms():
-    """Standard inference transforms — matches val transforms in augmentations.py."""
+    """Standard inference transforms - matches val transforms in augmentations.py."""
     return transforms.Compose([
         transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),
         transforms.ToTensor(),
@@ -189,9 +294,9 @@ def get_tta_transforms():
     ]
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 # INFERENCE LOOP
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 @torch.no_grad()
 def run_inference_single(model, test_dir: str, transform, batch_size: int,
                          device: str, use_fp16: bool) -> pd.DataFrame:
@@ -214,8 +319,11 @@ def run_inference_single(model, test_dir: str, transform, batch_size: int,
         if use_fp16 and device == "cuda":
             batch_imgs = batch_imgs.half()
 
-        logits = model(batch_imgs)              # (B, 1) or (B,)
-        probs  = torch.sigmoid(logits).squeeze(-1).float().cpu().numpy()
+        if isinstance(model, EnsembleRunner):
+            probs = model(batch_imgs).float().cpu().numpy()
+        else:
+            logits = model(batch_imgs)              # (B, 1) or (B,)
+            probs  = torch.sigmoid(logits).squeeze(-1).float().cpu().numpy()
 
         all_ids.extend(list(batch_ids))
         all_probs.extend(probs.tolist())
@@ -266,9 +374,9 @@ def run_inference(model, test_dir: str, batch_size: int, device: str,
     return result
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 # VALIDATION
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 def validate_output(df: pd.DataFrame, expected_count: int = None):
     """Validate that predictions.csv meets hackathon requirements."""
     errors = []
@@ -292,12 +400,12 @@ def validate_output(df: pd.DataFrame, expected_count: int = None):
         raise ValueError("Output validation failed. See errors above.")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 # MAIN
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 def main():
     parser = argparse.ArgumentParser(
-        description="Deepfake ML Hackathon — Inference Script (IIIT Bangalore)"
+        description="Deepfake ML Hackathon - Inference Script (IIIT Bangalore)"
     )
     parser.add_argument("--test_dir",   required=True,
                         help="Path to test images directory (flat, no subfolders)")
@@ -319,7 +427,7 @@ def main():
 
     device = DEVICE
     print(f"\n{'='*60}")
-    print(f"  Deepfake ML Hackathon — Inference")
+    print(f"  Deepfake ML Hackathon - Inference")
     print(f"  Test dir  : {args.test_dir}")
     print(f"  Weights   : {args.weights}")
     print(f"  Output    : {args.output}")
@@ -331,10 +439,10 @@ def main():
     print(f"  TTA       : {args.tta}")
     print(f"{'='*60}\n")
 
-    # ── Load model ────────────────────────────────────────────────────────
+    # -- Load model --------------------------------------------------------
     model = load_model(args.weights, args.backbone, device)
 
-    # ── Run inference ─────────────────────────────────────────────────────
+    # -- Run inference -----------------------------------------------------
     predictions = run_inference(
         model,
         test_dir=args.test_dir,
@@ -345,10 +453,10 @@ def main():
         threshold=args.threshold,
     )
 
-    # ── Validate ──────────────────────────────────────────────────────────
+    # -- Validate ----------------------------------------------------------
     validate_output(predictions)
 
-    # ── Save ──────────────────────────────────────────────────────────────
+    # -- Save --------------------------------------------------------------
     predictions.to_csv(args.output, index=False)
 
     print(f"\n[DONE] Predictions saved to: {args.output}")
