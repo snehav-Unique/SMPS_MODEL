@@ -1,0 +1,41 @@
+{
+  "is_ensemble": true,
+  "description": "5-Model Super-Ensemble combining Fused-MBConv, ConvNeXt, Hierarchical Swin ViT, Multi-Axis MaxViT, and Dense Feature-Reuse",
+  "models": [
+    {
+      "name": "efficientnetv2_s",
+      "arch": "tf_efficientnetv2_s",
+      "file": "efficientnetv2_s_best.pth",
+      "weight": 0.40,
+      "val_auc": 0.9025
+    },
+    {
+      "name": "convnext_tiny",
+      "arch": "convnext_tiny",
+      "file": "convnext_tiny_best.pth",
+      "weight": 0.25,
+      "val_auc": 0.8973
+    },
+    {
+      "name": "swin_tiny",
+      "arch": "swin_tiny_patch4_window7_224",
+      "file": "swin_tiny_best.pth",
+      "weight": 0.15,
+      "val_auc": 0.8953
+    },
+    {
+      "name": "maxvit_tiny",
+      "arch": "maxvit_tiny_tf_224",
+      "file": "maxvit_tiny_best.pth",
+      "weight": 0.12,
+      "val_auc": 0.8902
+    },
+    {
+      "name": "densenet121",
+      "arch": "densenet121",
+      "file": "densenet121_best.pth",
+      "weight": 0.08,
+      "val_auc": 0.8905
+    }
+  ]
+}
