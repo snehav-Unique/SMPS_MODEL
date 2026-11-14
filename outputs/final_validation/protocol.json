@@ -1,0 +1,10 @@
+{
+  "models": 5,
+  "sample": 200,
+  "seed": 42,
+  "bootstrap": 2000,
+  "device": "cuda",
+  "precision": "float32",
+  "tta": "original+horizontal_flip",
+  "limitation": "Fixed validation subset, not full validation or hidden test. FP32 validation; submission GPU inference uses FP16."
+}

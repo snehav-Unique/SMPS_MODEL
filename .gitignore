@@ -20,3 +20,22 @@ Thumbs.db
 
 # Interrupted atomic writes
 *.tmp
+
+# Local-only debugging and backups.
+FINAL_STATUS_previous.md
+predictions_before_verified.csv
+report_before_verified.pdf
+requirements_before_verified.txt
+preflight_models.py
+demo.ps1
+run_local_verification.ps1
+outputs/final_verification/local*.log
+outputs/final_verification/report_check_*.png
+outputs/final_verification/final_report_*.png
+# Earlier runs are preserved in their explicit diagnostic archives.
+outputs/final_verification/console_run_02.log
+outputs/final_verification/console_run_03.log
+outputs/final_verification/metrics_run_02.json
+outputs/final_verification/metrics_run_03.json
+outputs/final_verification/predictions_run_02.csv
+outputs/final_verification/predictions_run_03.csv

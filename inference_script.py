@@ -23,6 +23,13 @@ All paths are via CLI arguments - no hardcoded paths (required by hackathon rule
 import os
 import sys
 import argparse
+import json
+import time
+if __name__ == '__main__' and '--ensemble_worker' not in sys.argv:
+    from ensemble_worker_control import run_if_ensemble
+    ensemble_exit = run_if_ensemble(sys.argv[1:])
+    if ensemble_exit is not None:
+        sys.exit(ensemble_exit)
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -45,6 +52,17 @@ NUM_WORKERS  = 4 if torch.cuda.is_available() else 0
 THRESHOLD    = 0.5
 DEVICE       = "cuda" if torch.cuda.is_available() else "cpu"
 BACKBONE     = "efficientnet_b4"
+PROGRESS_PATH = None
+RAW_OUTPUT = False
+
+
+def write_progress(**values):
+    if PROGRESS_PATH:
+        path = Path(PROGRESS_PATH)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temp = path.with_suffix('.tmp')
+        temp.write_text(json.dumps(values), encoding='utf-8')
+        temp.replace(path)
 
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD  = [0.229, 0.224, 0.225]
@@ -78,7 +96,7 @@ class TestDataset(Dataset):
             img = Image.open(img_path).convert("RGB")
         except Exception as e:
             print(f"[WARNING] Could not read {img_path}: {e}. Using blank image.")
-            img = Image.new("RGB", (IMAGE_SIZE, IMAGE_SIZE), color=(128, 128, 128))
+            raise RuntimeError(f"Unreadable test image: {img_path}") from e
 
         if self.transform:
             img = self.transform(img)
@@ -187,7 +205,13 @@ class EnsembleRunner:
         return total
 
 
-def load_model(weights_path: str, backbone: str, device: str):
+class SequentialEnsemble:
+    def __init__(self, config, base_dir):
+        self.config = config
+        self.base_dir = base_dir
+
+
+def load_model(weights_path: str, backbone: str, device: str, sequential=False):
     """Load model and weights onto device (supports single model, JSON config, or ensemble bundle)."""
     import json
     w_path = Path(weights_path)
@@ -207,6 +231,8 @@ def load_model(weights_path: str, backbone: str, device: str):
     if w_path.suffix.lower() == ".json":
         with open(w_path, "r", encoding="utf-8") as f:
             cfg = json.load(f)
+        if sequential:
+            return SequentialEnsemble(cfg, w_path.parent)
         print(f"[INFO] Loading Super-Ensemble ({len(cfg['models'])} models) via {w_path.name} on {device} ...")
         models_and_weights = []
         base_dir = w_path.parent
@@ -328,9 +354,11 @@ def run_inference_single(model, test_dir: str, transform, batch_size: int,
         all_ids.extend(list(batch_ids))
         all_probs.extend(probs.tolist())
 
+        write_progress(stage='inference', processed=len(all_ids), total=len(dataset),
+                       batch=i + 1, batches=total_batches, device=device)
         if (i + 1) % 10 == 0 or (i + 1) == total_batches:
             print(f"  Batch [{i+1:4d}/{total_batches}] | "
-                  f"Processed {(i+1)*batch_size} images", end="\r")
+                  f"Processed {len(all_ids)} images", flush=True)
 
     print()
     return pd.DataFrame({"image_id": all_ids, "confidence": all_probs})
@@ -342,6 +370,33 @@ def run_inference(model, test_dir: str, batch_size: int, device: str,
     Main inference runner. Supports standard and TTA inference.
     Returns DataFrame with columns: image_id, label, confidence
     """
+    if isinstance(model, SequentialEnsemble):
+        import gc
+        accumulator = None
+        ids = None
+        for info in model.config['models']:
+            print(f"[MODEL] {info['name']} | blend weight {info['weight']}", flush=True)
+            single = load_model(str(model.base_dir/info['file']), info['arch'], device)
+            wrapped = EnsembleRunner([(single, 1.0)], device)
+            if use_fp16 and device == 'cuda':
+                wrapped.half()
+            passes = get_tta_transforms() if use_tta else [get_inference_transforms()]
+            predictions = [run_inference_single(wrapped, test_dir, tf, batch_size, device, use_fp16) for tf in passes]
+            current = np.mean([p.confidence.to_numpy(dtype=np.float32) for p in predictions], axis=0)
+            if ids is None:
+                ids = predictions[0].image_id.to_list()
+                accumulator = np.zeros(len(ids), dtype=np.float32)
+            assert ids == predictions[0].image_id.to_list()
+            accumulator += info['weight'] * current
+            del single, wrapped, predictions
+            gc.collect()
+            if device == 'cuda':
+                torch.cuda.empty_cache()
+        result = pd.DataFrame({'image_id': ids, 'confidence': accumulator})
+        result['label'] = (result.confidence >= threshold).astype(int)
+        result['confidence'] = result.confidence.round(6)
+        return result[['image_id', 'label', 'confidence']]
+
     if use_fp16 and device == "cuda":
         model = model.half()
         print("[INFO] FP16 inference enabled.")
@@ -368,7 +423,8 @@ def run_inference(model, test_dir: str, batch_size: int, device: str,
         )
 
     result["label"]      = (result["confidence"] >= threshold).astype(int)
-    result["confidence"] = result["confidence"].round(6)
+    if not RAW_OUTPUT:
+        result["confidence"] = result["confidence"].round(6)
     result = result[["image_id", "label", "confidence"]]  # Required column order
 
     return result
@@ -385,6 +441,8 @@ def validate_output(df: pd.DataFrame, expected_count: int = None):
     if "confidence" not in df.columns: errors.append("Missing column: confidence")
 
     if not errors:
+        if df.isnull().any().any():
+            errors.append("Missing values in predictions")
         if not df["confidence"].between(0, 1).all():
             errors.append("Confidence values outside [0, 1]")
         if not df["label"].isin([0, 1]).all():
@@ -404,6 +462,8 @@ def validate_output(df: pd.DataFrame, expected_count: int = None):
 # MAIN
 # -----------------------------------------------------------------------------
 def main():
+    global PROGRESS_PATH, RAW_OUTPUT
+    started = time.perf_counter()
     parser = argparse.ArgumentParser(
         description="Deepfake ML Hackathon - Inference Script (IIIT Bangalore)"
     )
@@ -419,11 +479,24 @@ def main():
                         help=f"Inference batch size (default: {BATCH_SIZE})")
     parser.add_argument("--threshold",  type=float, default=THRESHOLD,
                         help=f"Fake probability threshold (default: {THRESHOLD})")
-    parser.add_argument("--fp16",       action="store_true", default=True,
+    parser.add_argument("--fp16",       action="store_true", default=False,
                         help="Use FP16 inference on CUDA (default: True)")
     parser.add_argument("--tta",        action="store_true", default=False,
                         help="Use test-time augmentation (slower, may improve AUC)")
+    parser.add_argument('--progress_json', help='Optional live dashboard progress file')
+    parser.add_argument('--metrics_json', help='Optional runtime and GPU memory evidence')
+    parser.add_argument('--threads', type=int, default=4, help='CPU intra-op threads')
+    parser.add_argument('--ensemble_worker', action='store_true', help=argparse.SUPPRESS)
+    parser.add_argument('--flip_tta', action='store_true', help=argparse.SUPPRESS)
     args = parser.parse_args()
+    PROGRESS_PATH = args.progress_json
+    RAW_OUTPUT = args.ensemble_worker
+    if args.threads < 1:
+        parser.error('--threads must be positive')
+    torch.set_num_threads(args.threads)
+    write_progress(stage='loading', processed=0, total=3000)
+    if torch.cuda.is_available():
+        torch.cuda.reset_peak_memory_stats()
 
     device = DEVICE
     print(f"\n{'='*60}")
@@ -440,7 +513,9 @@ def main():
     print(f"{'='*60}\n")
 
     # -- Load model --------------------------------------------------------
-    model = load_model(args.weights, args.backbone, device)
+    model = load_model(args.weights, args.backbone, device, sequential=True)
+    if args.flip_tta:
+        model = EnsembleRunner([(model, 1.0)], device)
 
     # -- Run inference -----------------------------------------------------
     predictions = run_inference(
@@ -454,10 +529,19 @@ def main():
     )
 
     # -- Validate ----------------------------------------------------------
-    validate_output(predictions)
+    validate_output(predictions, expected_count=3000)
 
     # -- Save --------------------------------------------------------------
     predictions.to_csv(args.output, index=False)
+    if device == 'cuda':
+        torch.cuda.synchronize()
+    metrics = dict(stage='complete', processed=len(predictions), total=len(predictions),
+                   device=device, seconds=time.perf_counter() - started,
+                   device_name=torch.cuda.get_device_name() if device == 'cuda' else 'CPU',
+                   peak_allocated_mib=torch.cuda.max_memory_allocated()/1048576 if device == 'cuda' else None)
+    write_progress(**metrics)
+    if args.metrics_json:
+        Path(args.metrics_json).write_text(json.dumps(metrics, indent=2), encoding='utf-8')
 
     print(f"\n[DONE] Predictions saved to: {args.output}")
     print(f"  Total images   : {len(predictions)}")

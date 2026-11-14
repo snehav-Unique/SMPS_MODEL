@@ -1,0 +1,191 @@
+
+[ENSEMBLE 1/5] efficientnetv2_s | weight=0.4
+
+============================================================
+  Deepfake ML Hackathon - Inference
+  Test dir  : /content/SMPS_FINAL/datasets/extracted/hackathon_dataset/test/images
+  Weights   : /content/SMPS_FINAL/weights/efficientnetv2_s_best.pth
+  Output    : /content/SMPS_FINAL/outputs/final_verification/smps_workers_hqmd1x9a/efficientnetv2_s.csv
+  Backbone  : tf_efficientnetv2_s
+  Device    : cuda
+  Batch     : 64
+  Threshold : 0.5
+  FP16      : True
+  TTA       : False
+============================================================
+
+[INFO] Model (tf_efficientnetv2_s) loaded from /content/SMPS_FINAL/weights/efficientnetv2_s_best.pth on cuda
+[INFO] FP16 inference enabled.
+[INFO] Running standard inference...
+[INFO] Found 3000 test images in /content/SMPS_FINAL/datasets/extracted/hackathon_dataset/test/images
+/usr/local/lib/python3.13/dist-packages/torch/utils/data/dataloader.py:431: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  self.check_worker_number_rationality()
+/usr/local/lib/python3.13/dist-packages/torch/utils/data/dataloader.py:437: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  self.check_worker_number_rationality()
+  Batch [  10/47] | Processed 640 images
+  Batch [  20/47] | Processed 1280 images
+  Batch [  30/47] | Processed 1920 images
+  Batch [  40/47] | Processed 2560 images
+  Batch [  47/47] | Processed 3000 images
+
+
+[DONE] Predictions saved to: /content/SMPS_FINAL/outputs/final_verification/smps_workers_hqmd1x9a/efficientnetv2_s.csv
+  Total images   : 3000
+  Predicted FAKE : 1526 (50.9%)
+  Predicted REAL : 1474
+  Mean confidence: 0.5060
+  Min confidence : 0.0004
+  Max confidence : 1.0000
+
+[ENSEMBLE 2/5] convnext_tiny | weight=0.25
+
+============================================================
+  Deepfake ML Hackathon - Inference
+  Test dir  : /content/SMPS_FINAL/datasets/extracted/hackathon_dataset/test/images
+  Weights   : /content/SMPS_FINAL/weights/convnext_tiny_best.pth
+  Output    : /content/SMPS_FINAL/outputs/final_verification/smps_workers_hqmd1x9a/convnext_tiny.csv
+  Backbone  : convnext_tiny
+  Device    : cuda
+  Batch     : 64
+  Threshold : 0.5
+  FP16      : True
+  TTA       : False
+============================================================
+
+[INFO] Model (convnext_tiny) loaded from /content/SMPS_FINAL/weights/convnext_tiny_best.pth on cuda
+[INFO] FP16 inference enabled.
+[INFO] Running standard inference...
+[INFO] Found 3000 test images in /content/SMPS_FINAL/datasets/extracted/hackathon_dataset/test/images
+/usr/local/lib/python3.13/dist-packages/torch/utils/data/dataloader.py:431: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  self.check_worker_number_rationality()
+/usr/local/lib/python3.13/dist-packages/torch/utils/data/dataloader.py:437: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  self.check_worker_number_rationality()
+  Batch [  10/47] | Processed 640 images
+  Batch [  20/47] | Processed 1280 images
+  Batch [  30/47] | Processed 1920 images
+  Batch [  40/47] | Processed 2560 images
+  Batch [  47/47] | Processed 3000 images
+
+
+[DONE] Predictions saved to: /content/SMPS_FINAL/outputs/final_verification/smps_workers_hqmd1x9a/convnext_tiny.csv
+  Total images   : 3000
+  Predicted FAKE : 1469 (49.0%)
+  Predicted REAL : 1531
+  Mean confidence: 0.4699
+  Min confidence : 0.1423
+  Max confidence : 0.8105
+
+[ENSEMBLE 3/5] swin_tiny | weight=0.15
+
+============================================================
+  Deepfake ML Hackathon - Inference
+  Test dir  : /content/SMPS_FINAL/datasets/extracted/hackathon_dataset/test/images
+  Weights   : /content/SMPS_FINAL/weights/swin_tiny_best.pth
+  Output    : /content/SMPS_FINAL/outputs/final_verification/smps_workers_hqmd1x9a/swin_tiny.csv
+  Backbone  : swin_tiny_patch4_window7_224
+  Device    : cuda
+  Batch     : 64
+  Threshold : 0.5
+  FP16      : True
+  TTA       : False
+============================================================
+
+[INFO] Model (swin_tiny_patch4_window7_224) loaded from /content/SMPS_FINAL/weights/swin_tiny_best.pth on cuda
+[INFO] FP16 inference enabled.
+[INFO] Running standard inference...
+[INFO] Found 3000 test images in /content/SMPS_FINAL/datasets/extracted/hackathon_dataset/test/images
+/usr/local/lib/python3.13/dist-packages/torch/utils/data/dataloader.py:431: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  self.check_worker_number_rationality()
+/usr/local/lib/python3.13/dist-packages/torch/utils/data/dataloader.py:437: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  self.check_worker_number_rationality()
+  Batch [  10/47] | Processed 640 images
+  Batch [  20/47] | Processed 1280 images
+  Batch [  30/47] | Processed 1920 images
+  Batch [  40/47] | Processed 2560 images
+  Batch [  47/47] | Processed 3000 images
+
+
+[DONE] Predictions saved to: /content/SMPS_FINAL/outputs/final_verification/smps_workers_hqmd1x9a/swin_tiny.csv
+  Total images   : 3000
+  Predicted FAKE : 1292 (43.1%)
+  Predicted REAL : 1708
+  Mean confidence: 0.4416
+  Min confidence : 0.0936
+  Max confidence : 0.8594
+
+[ENSEMBLE 4/5] maxvit_tiny | weight=0.12
+
+============================================================
+  Deepfake ML Hackathon - Inference
+  Test dir  : /content/SMPS_FINAL/datasets/extracted/hackathon_dataset/test/images
+  Weights   : /content/SMPS_FINAL/weights/maxvit_tiny_best.pth
+  Output    : /content/SMPS_FINAL/outputs/final_verification/smps_workers_hqmd1x9a/maxvit_tiny.csv
+  Backbone  : maxvit_tiny_tf_224
+  Device    : cuda
+  Batch     : 64
+  Threshold : 0.5
+  FP16      : True
+  TTA       : False
+============================================================
+
+[INFO] Model (maxvit_tiny_tf_224) loaded from /content/SMPS_FINAL/weights/maxvit_tiny_best.pth on cuda
+[INFO] FP16 inference enabled.
+[INFO] Running standard inference...
+[INFO] Found 3000 test images in /content/SMPS_FINAL/datasets/extracted/hackathon_dataset/test/images
+/usr/local/lib/python3.13/dist-packages/torch/utils/data/dataloader.py:431: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  self.check_worker_number_rationality()
+/usr/local/lib/python3.13/dist-packages/torch/utils/data/dataloader.py:437: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  self.check_worker_number_rationality()
+  Batch [  10/47] | Processed 640 images
+  Batch [  20/47] | Processed 1280 images
+  Batch [  30/47] | Processed 1920 images
+  Batch [  40/47] | Processed 2560 images
+  Batch [  47/47] | Processed 3000 images
+
+
+[DONE] Predictions saved to: /content/SMPS_FINAL/outputs/final_verification/smps_workers_hqmd1x9a/maxvit_tiny.csv
+  Total images   : 3000
+  Predicted FAKE : 1483 (49.4%)
+  Predicted REAL : 1517
+  Mean confidence: 0.4918
+  Min confidence : 0.0017
+  Max confidence : 0.9985
+
+[ENSEMBLE 5/5] densenet121 | weight=0.08
+
+============================================================
+  Deepfake ML Hackathon - Inference
+  Test dir  : /content/SMPS_FINAL/datasets/extracted/hackathon_dataset/test/images
+  Weights   : /content/SMPS_FINAL/weights/densenet121_best.pth
+  Output    : /content/SMPS_FINAL/outputs/final_verification/smps_workers_hqmd1x9a/densenet121.csv
+  Backbone  : densenet121
+  Device    : cuda
+  Batch     : 64
+  Threshold : 0.5
+  FP16      : True
+  TTA       : False
+============================================================
+
+[INFO] Model (densenet121) loaded from /content/SMPS_FINAL/weights/densenet121_best.pth on cuda
+[INFO] FP16 inference enabled.
+[INFO] Running standard inference...
+[INFO] Found 3000 test images in /content/SMPS_FINAL/datasets/extracted/hackathon_dataset/test/images
+/usr/local/lib/python3.13/dist-packages/torch/utils/data/dataloader.py:431: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  self.check_worker_number_rationality()
+/usr/local/lib/python3.13/dist-packages/torch/utils/data/dataloader.py:437: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  self.check_worker_number_rationality()
+  Batch [  10/47] | Processed 640 images
+  Batch [  20/47] | Processed 1280 images
+  Batch [  30/47] | Processed 1920 images
+  Batch [  40/47] | Processed 2560 images
+  Batch [  47/47] | Processed 3000 images
+
+
+[DONE] Predictions saved to: /content/SMPS_FINAL/outputs/final_verification/smps_workers_hqmd1x9a/densenet121.csv
+  Total images   : 3000
+  Predicted FAKE : 1461 (48.7%)
+  Predicted REAL : 1539
+  Mean confidence: 0.4856
+  Min confidence : 0.0154
+  Max confidence : 0.9883
+[ENSEMBLE COMPLETE] 3000 images; 116.81 seconds; Tesla T4

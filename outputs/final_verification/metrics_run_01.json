@@ -1,0 +1,58 @@
+{
+  "stage": "complete",
+  "processed": 3000,
+  "total": 3000,
+  "models": 5,
+  "device": "cuda",
+  "device_name": "Tesla T4",
+  "seconds": 172.2416462010001,
+  "peak_allocated_mib": 2796.9345703125,
+  "per_model": [
+    {
+      "stage": "complete",
+      "processed": 3000,
+      "total": 3000,
+      "device": "cuda",
+      "seconds": 21.311431961999915,
+      "device_name": "Tesla T4",
+      "peak_allocated_mib": 641.8056640625
+    },
+    {
+      "stage": "complete",
+      "processed": 3000,
+      "total": 3000,
+      "device": "cuda",
+      "seconds": 27.690011627999866,
+      "device_name": "Tesla T4",
+      "peak_allocated_mib": 998.51220703125
+    },
+    {
+      "stage": "complete",
+      "processed": 3000,
+      "total": 3000,
+      "device": "cuda",
+      "seconds": 32.11863669600007,
+      "device_name": "Tesla T4",
+      "peak_allocated_mib": 1114.79052734375
+    },
+    {
+      "stage": "complete",
+      "processed": 3000,
+      "total": 3000,
+      "device": "cuda",
+      "seconds": 45.72126402699996,
+      "device_name": "Tesla T4",
+      "peak_allocated_mib": 2796.9345703125
+    },
+    {
+      "stage": "complete",
+      "processed": 3000,
+      "total": 3000,
+      "device": "cuda",
+      "seconds": 20.68397196800015,
+      "device_name": "Tesla T4",
+      "peak_allocated_mib": 722.0966796875
+    }
+  ],
+  "execution": "isolated sequential workers; original+horizontal_flip"
+}

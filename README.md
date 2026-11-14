@@ -1,104 +1,63 @@
-# Deepfake Face Classification — IIIT Bangalore Hackathon
-**Team: SMPS** | **Track: Binary Face Classification** | **Target Score: 97.50 / 100.00 pts**
+# Team SMPS - Deepfake Face Classification
 
----
+IIIT Bangalore Deepfake ML Hackathon. A five-model ensemble classifies aligned faces as Real (0) or Fake (1), using only the supplied dataset for fine-tuning.
 
-## 🏆 Executive Summary & Official Evaluation Score
+## Verified final results
 
-Our solution is a **5-Model Super-Ensemble** combining 5 fundamentally distinct computer vision paradigms to capture both local edge blending seams and macro-level facial geometry:
-1. **Fused-MBConv CNN** (`tf_efficientnetv2_s`): Anchor detector, **0.9025 Peak Val AUC**.
-2. **Modernized 7x7 Depthwise CNN** (`convnext_tiny`): Macro-geometry modeling, **0.8973 Peak Val AUC**.
-3. **Shifted-Window Hierarchical ViT** (`swin_tiny`): Patch boundary seam attention, **0.8953 Peak Val AUC**.
-4. **Multi-Axis Vision Transformer** (`maxvit_tiny_tf_224`): Local Block + Dilated Grid attention, **0.8902 Peak Val AUC**.
-5. **Dense Feature Reuse Network** (`densenet121`): Direct concatenative bypass, **0.8905 Peak Val AUC**.
+| Check | Measured result |
+|---|---|
+| Independent final replay | All 3,000 labels and probabilities match exactly |
+| Final FP32 process-wall time on Tesla T4 | 172.34 seconds |
+| Peak PyTorch allocated GPU memory | 2,796.93 MiB; excludes other GPU allocations |
+| Clean AUC on 200 balanced held-out images | 0.8817; 95% bootstrap interval 0.8243-0.9311 |
+| Accuracy at threshold 0.5 on that subset | 87.5% |
+| Largest observed corruption AUC drop | 0.0110 under Gaussian noise |
 
-### Official Evaluation Score Breakdown (100 pts Base + 5 Bonus pts)
+The drop interval extends above 0.02, so this sample does not establish a population bound. Private test labels and official scores are unknown. See [verification evidence](outputs/final_verification/verification.json) and [validation statistics](outputs/final_validation/statistics.csv).
 
-| Hackathon Criterion | Max Points | Our Score | Technical Justification |
-|:---|:---:|:---:|:---|
-| **1. Accuracy on Test Set (AUC-ROC)** | 50 | **42.50 / 50** | Projected ensemble AUC $\approx 0.925 - 0.935$ (`max(0, [AUC-0.5]/0.5) * 50`) |
-| **2. Model Efficiency** | 20 | **20.00 / 20** | Tesla T4 runtime: **60.36 s** (< 300 s limit for 20/20); Peak VRAM: 561.9 MiB |
-| **3. Generalization & Robustness** | 20 | **20.00 / 20** | Max corruption drop: **0.0129 (< 2.0%)** across JPEG Q50/70, Blur, and Noise |
-| **4. Documentation Quality** | 10 | **10.00 / 10** | Comprehensive 4-page report (`report.pdf`) satisfying all 6 manual rubric criteria |
-| **Bonus: Diverse Architecture Ensemble** | +2 | **+2.00** | 5 distinct paradigms; low inter-model correlation ($r \in [0.8815, 0.9286]$) |
-| **Bonus: Grad-CAM Explainability** | +2 | **+2.00** | 15 Grad-CAM visual overlays in `outputs/gradcam/` showing seam attention |
-| **Bonus: Dual PyTorch & TensorFlow Export** | +1 | **+1.00** | Exported `.pth`, `model_weights_tf.h5`, `model_weights_tf.keras`, `maxvit_tiny.onnx` |
-| **Penalties** | 0 | **0.00** | Zero hardcoded paths; fully reproducible; canary checks validated |
-| **TOTAL SCORE** | **105** | **97.50 / 100** | 🥇 **Strong Podium Contender** |
+## Architecture
 
----
+| Model | Fixed weight | Recorded individual peak validation AUC |
+|---|---:|---:|
+| EfficientNetV2-S | 0.40 | 0.9025 |
+| ConvNeXt-Tiny | 0.25 | 0.8973 |
+| Swin-Tiny | 0.15 | 0.8953 |
+| MaxViT-Tiny | 0.12 | 0.8902 |
+| DenseNet-121 | 0.08 | 0.8905 |
 
-## ⚡ Reproduction & CLI Inference Guide
+Each model averages original and horizontal-flip probabilities before weighted blending. The individual peaks and final robustness subset use different samples; these values do not establish an ensemble gain over the best individual model. Weights are heuristic, not a demonstrated optimum.
 
-The official inference script (`inference_script.py`) accepts CLI arguments with **zero hardcoded paths**.
+## Dashboard and video
 
-### 1. Reproduce Full Super-Ensemble Predictions (Recommended)
+Open [results.html](results.html) in a browser. It works offline, contains measured charts and Grad-CAM examples, and supports click-to-enlarge. Refresh shows a two-second blank screen followed by a staggered entrance animation. The [video script](VIDEO_GUIDE.md) follows the graphs in order.
+
+[report.pdf](report.pdf) is the two-page submission report. [report_detailed.pdf](report_detailed.pdf) preserves the earlier report.
+
+## Colab
+
+Upload [the final notebook](notebooks/SMPS_Final_Five_Model_Verification.ipynb) to Colab, select a Tesla T4 GPU, and Run all. It embeds the final scripts, downloads official assets with hash checks, generates a fresh FP32 candidate, independently replays inference, evaluates robustness and exports results. Large assets stay in Colab.
+
+## Reproduction
+
+Install requirements.txt in a compatible Python environment. Actual Colab dependencies are recorded in [environment.txt](outputs/final_verification/environment.txt). Download real checkpoints and the official dataset with Git LFS; pointer files are not usable weights.
+
 ```bash
-python inference_script.py \
-    --test_dir /path/to/test/images/ \
-    --weights weights/ensemble_config.json \
-    --output predictions.csv
-```
-*(Also accepts directory `--weights weights/` directly).*
-
-### 2. Single-Model Inference (Anchor EfficientNetV2-S)
-```bash
-python inference_script.py \
-    --test_dir /path/to/test/images/ \
-    --weights weights/efficientnetv2_s_best.pth \
-    --backbone tf_efficientnetv2_s \
-    --output predictions_v2.csv
+git lfs pull --include="weights/*,datasets/hackathon_dataset.zip"
+python inference_script.py --test_dir PATH/test/images --weights weights/ensemble_config.json --output fresh_predictions.csv
+python verify_final.py --test-dir PATH/test/images
+python validate_final.py --dataset-root PATH
+python build_results.py
 ```
 
-### 3. Submission Verification One-Liner (Canary Checks)
-```bash
-python -c "import pandas as pd; df = pd.read_csv('predictions.csv'); assert len(df)==3000; assert list(df.columns)==['image_id','label','confidence']; assert df.confidence.between(0,1).all(); print('[OK] 100% Validated for Hackathon Submission!')"
-```
+Inference defaults to FP32 and isolates models in sequential processes to limit memory use. The old CSV did not match the current pipeline and is preserved as predictions_original.csv. Final predictions.csv was generated by the actual FP32 pipeline, then matched exactly by a separate full replay. The legacy blend audit refers to the original CSV, separately from the final replay.
 
----
+The final submission needs predictions.csv, inference_script.py, ensemble_worker_control.py, weights/ensemble_config.json with all five real checkpoints, requirements.txt, report.pdf and source code. Results archives exclude large weights and dataset files.
 
-## 📂 Deliverables & Repository Structure
+## Evidence and limitations
 
-```
-Team_SMPS_Submission/
-├── predictions.csv          ← Final 5-model Super-Ensemble predictions (3,000 rows)
-├── inference_script.py      ← Tested CLI inference runner (accepts --test_dir, --weights, --output)
-├── requirements.txt         ← Pinned environment dependencies
-├── report.pdf               ← Official 4-page publication-quality technical report
-├── README.md                ← This guide and score audit
-├── weights/                 ← Model checkpoints and configuration (< 700 MB, well under 5 GB limit)
-│   ├── ensemble_config.json ← Ensemble definition and optimal blending weights
-│   ├── efficientnetv2_s_best.pth (81.6 MB)
-│   ├── convnext_tiny_best.pth   (111.4 MB)
-│   ├── swin_tiny_best.pth       (110.1 MB)
-│   ├── maxvit_tiny_best.pth     (122.0 MB)
-│   ├── densenet121_best.pth     (28.4 MB)
-│   ├── best_model.pth           (70.9 MB, baseline)
-│   ├── maxvit_tiny.onnx         (3.6 MB, ONNX export bonus)
-│   ├── model_weights_tf.h5      (82.8 MB, TensorFlow export bonus)
-│   └── model_weights_tf.keras   (83.1 MB, Keras export bonus)
-├── outputs/
-│   ├── gradcam/             ← 15 Grad-CAM heatmaps (+2 bonus points)
-│   ├── robustness/          ← Robustness stress-testing logs and figures
-│   └── efficiency_t4/       ← NVIDIA T4 benchmark profiling report
-└── src/
-    ├── augmentations.py     ← Albumentations training and TTA transforms
-    ├── dataset.py           ← DeepfakeDataset and TestDataset loaders
-    └── gradcam_vis.py       ← Grad-CAM overlay generator
-```
-
----
-
-## 🔬 Hardware Benchmarking & Robustness Summary
-
-- **NVIDIA Tesla T4 GPU Runtime:** 3 measured runs finished in 56.74 s – 77.66 s (**median 60.36 s**), completing in **1.01 minutes** (limit: < 300 s / 5 min). Peak VRAM: **561.9 MiB** (< 4% of 16 GB T4).
-- **Robustness Under Corruptions:**
-  - Clean Baseline: AUC **0.8813**
-  - JPEG Re-compression Q50: AUC **0.8874** (+0.0061)
-  - JPEG Re-compression Q70: AUC **0.8854** (+0.0041)
-  - Gaussian Blur ($\sigma=1.5$): AUC **0.8740** (-0.0073)
-  - Gaussian Noise ($\sigma=15$): AUC **0.8684** (-0.0129)
-  - **Maximum Degradation Drop:** 0.0129 (< 2.0% threshold), confirming that predictions capture high-level semantic anomalies rather than superficial noise patterns.
-
----
-*Deepfake ML Hackathon — IIIT Bangalore | Team SMPS*
+- Final five-model evidence: outputs/final_verification and outputs/final_validation.
+- Earlier FP16 timing and failed comparisons: outputs/final_verification_fp16.
+- FP32 comparison against the original CSV: outputs/final_verification_original_comparison.
+- Earlier four-model evidence remains under outputs/efficiency_t4 and outputs/robustness; it is not five-model evidence.
+- Grad-CAM is qualitative attribution, not proof of causality or correct decisions.
+- No external fine-tuning data, hidden-test accuracy, guaranteed score or guaranteed ensemble gain is claimed.

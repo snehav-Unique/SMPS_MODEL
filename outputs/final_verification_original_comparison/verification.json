@@ -1,0 +1,94 @@
+{
+  "saved_blend": {
+    "passed": true,
+    "max_probability_difference": 0.0,
+    "mean_probability_difference": 0.0,
+    "label_mismatches": 0,
+    "tolerance": 0,
+    "images": 3000
+  },
+  "weights_to_csv_status": "failed",
+  "missing_weights": [],
+  "runs": [
+    {
+      "run": 1,
+      "process_wall_seconds": 176.64324470500014,
+      "reproduction": {
+        "passed": false,
+        "max_probability_difference": 0.002326999999999968,
+        "mean_probability_difference": 0.00023019133333333338,
+        "label_mismatches": 2,
+        "tolerance": 1e-05,
+        "images": 3000
+      },
+      "metrics": {
+        "stage": "complete",
+        "processed": 3000,
+        "total": 3000,
+        "models": 5,
+        "device": "cuda",
+        "device_name": "Tesla T4",
+        "seconds": 176.5552711160003,
+        "peak_allocated_mib": 2796.9345703125,
+        "per_model": [
+          {
+            "stage": "complete",
+            "processed": 3000,
+            "total": 3000,
+            "device": "cuda",
+            "seconds": 22.27654531600001,
+            "device_name": "Tesla T4",
+            "peak_allocated_mib": 641.8056640625
+          },
+          {
+            "stage": "complete",
+            "processed": 3000,
+            "total": 3000,
+            "device": "cuda",
+            "seconds": 29.908012038999914,
+            "device_name": "Tesla T4",
+            "peak_allocated_mib": 998.51220703125
+          },
+          {
+            "stage": "complete",
+            "processed": 3000,
+            "total": 3000,
+            "device": "cuda",
+            "seconds": 30.410394995999923,
+            "device_name": "Tesla T4",
+            "peak_allocated_mib": 1114.79052734375
+          },
+          {
+            "stage": "complete",
+            "processed": 3000,
+            "total": 3000,
+            "device": "cuda",
+            "seconds": 48.31019553899978,
+            "device_name": "Tesla T4",
+            "peak_allocated_mib": 2796.9345703125
+          },
+          {
+            "stage": "complete",
+            "processed": 3000,
+            "total": 3000,
+            "device": "cuda",
+            "seconds": 19.84626009800013,
+            "device_name": "Tesla T4",
+            "peak_allocated_mib": 722.0966796875
+          }
+        ],
+        "execution": "isolated sequential workers; original+horizontal_flip"
+      }
+    }
+  ],
+  "reference_sha256": "466aa331bde396f43322339948d835658e742b60debf50f8de83c2515960158d",
+  "inference_sha256": "8ac9f93386c611b9530781617e9aa096b5d8361c8b607972eb501e0d79056e2d",
+  "device": "Tesla T4",
+  "weight_sha256": {
+    "efficientnetv2_s_best.pth": "3e5a3858cd40f22bfb885fd99aaedeff1c049ad720a49755e5e8d15a406d5b6e",
+    "convnext_tiny_best.pth": "6165cde373bea423bc3da6e4d24d85f0b13bc44ee0bfcfff9b9f96dedfe18d3e",
+    "swin_tiny_best.pth": "c45de824da9aa780f67b3ca597ed7a9352d6b957ce7cd825cb1f3b29019d02f3",
+    "maxvit_tiny_best.pth": "10baf3a90f3a717aef75067ab87358c0c07717e827a5c3f2684c76082c56d083",
+    "densenet121_best.pth": "683de13e7980c6e1365f877ee58ca81ed43f8e1ed87d0281f2f51f21d19bdc9e"
+  }
+}
