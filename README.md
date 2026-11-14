@@ -1,5 +1,7 @@
 # Team SMPS - Deepfake Face Classification
 
+**Official Code Repository:** https://github.com/snehav-Unique/SMPS_MODEL
+
 IIIT Bangalore Deepfake ML Hackathon. A five-model ensemble classifies aligned faces as Real (0) or Fake (1), using only the supplied dataset for fine-tuning.
 
 ## Verified final results

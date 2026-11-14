@@ -433,7 +433,8 @@ def build_pdf(output_path: str):
     cli_box_data = [
         [Paragraph(
             "<font name='Courier' size='6.6' color='#1A365D'>"
-            "# Standard Super-Ensemble Inference:<br/>"
+            "# Clone Repository & Standard Super-Ensemble Inference:<br/>"
+            "git clone https://github.com/snehav-Unique/SMPS_MODEL.git<br/>"
             "python inference_script.py --test_dir ./test/images/ --weights weights/ensemble_config.json --output predictions.csv<br/>"
             "<br/>"
             "# Single-Model Anchor Evaluation (EfficientNetV2-S):<br/>"
@@ -454,7 +455,8 @@ def build_pdf(output_path: str):
     story.append(Spacer(1, 1.0))
     story.append(Paragraph(
         "<font size='6.7' color='#4A5568'><b>Submission Package Checklist:</b> predictions.csv (3,000 test images), inference_script.py, requirements.txt, "
-        "report.pdf (this 2-page document), Explanatory Video.mp4, weights/ (all 5 binary checkpoints, ensemble_config.json, ONNX, and TensorFlow exports). All code reproduces predictions.csv identically.</font>",
+        "report.pdf (this 2-page document), Explanatory Video.mp4, weights/ (all 5 binary checkpoints, ensemble_config.json, ONNX, and TensorFlow exports). "
+        "<b>Repository:</b> https://github.com/snehav-Unique/SMPS_MODEL. All code reproduces predictions.csv identically.</font>",
         body_style
     ))
 
