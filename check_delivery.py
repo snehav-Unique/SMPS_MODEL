@@ -14,7 +14,8 @@ for cell in notebook['cells']:
         ast.parse(source)
         count+=1
 assert len(PdfReader(root/'report.pdf').pages)==2
-assert len(PdfReader(root/'report_detailed.pdf').pages)==4
+if (root/'report_detailed.pdf').exists():
+    assert len(PdfReader(root/'report_detailed.pdf').pages)==4
 page=(root/'results.html').read_text(encoding='utf-8')
 assert 'What to say' not in page and '<pre' not in page and 'FIVE-MODEL ENSEMBLE' in page
 assert page.count('data:image/png;base64,')>=9

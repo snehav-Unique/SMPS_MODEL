@@ -31,7 +31,7 @@ Each model averages original and horizontal-flip probabilities before weighted b
 
 Open [results.html](results.html) in a browser. It works offline, contains measured charts and Grad-CAM examples, and supports click-to-enlarge. Refresh shows a two-second blank screen followed by a staggered entrance animation. The [video script](VIDEO_GUIDE.md) follows the graphs in order.
 
-[report.pdf](report.pdf) is the two-page submission report. [report_detailed.pdf](report_detailed.pdf) preserves the earlier report.
+[report.pdf](report.pdf) is the concise two-page official submission report.
 
 ## Colab
 
