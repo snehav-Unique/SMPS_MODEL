@@ -1,0 +1,20 @@
+{
+  "gpu": "Tesla T4",
+  "test_images": 3000,
+  "precision": "FP16",
+  "tta": "original and horizontal flip, probability average",
+  "batch_size": 64,
+  "workers": 2,
+  "inference_seconds_including_model_loads": 58.091873566000004,
+  "gpu_batch_ms_mean": 275.31793123610476,
+  "gpu_batch_ms_p50": 193.66349029541016,
+  "gpu_batch_ms_p95": 216.9224395751953,
+  "peak_allocated_mib": 561.86767578125,
+  "peak_reserved_mib": 944.0,
+  "torch": "2.14.1+cu130",
+  "timm": "1.0.31",
+  "cuda": "13.0",
+  "cudnn": 92800,
+  "python": "3.13.16 (main, Oct  1 2026, 15:40:24) [GCC 13.3.0]",
+  "utc": "2026-11-10T12:00:08.744399+00:00"
+}

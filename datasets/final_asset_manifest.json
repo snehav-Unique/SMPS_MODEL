@@ -1,0 +1,26 @@
+{
+  "weights/efficientnetv2_s_best.pth": {
+    "sha256": "3e5a3858cd40f22bfb885fd99aaedeff1c049ad720a49755e5e8d15a406d5b6e",
+    "bytes": 81617723
+  },
+  "weights/convnext_tiny_best.pth": {
+    "sha256": "6165cde373bea423bc3da6e4d24d85f0b13bc44ee0bfcfff9b9f96dedfe18d3e",
+    "bytes": 111355879
+  },
+  "weights/swin_tiny_best.pth": {
+    "sha256": "c45de824da9aa780f67b3ca597ed7a9352d6b957ce7cd825cb1f3b29019d02f3",
+    "bytes": 110149322
+  },
+  "weights/maxvit_tiny_best.pth": {
+    "sha256": "10baf3a90f3a717aef75067ab87358c0c07717e827a5c3f2684c76082c56d083",
+    "bytes": 122038277
+  },
+  "weights/densenet121_best.pth": {
+    "sha256": "683de13e7980c6e1365f877ee58ca81ed43f8e1ed87d0281f2f51f21d19bdc9e",
+    "bytes": 28439894
+  },
+  "datasets/hackathon_dataset.zip": {
+    "sha256": "3fa8ff24720524a182a4cc449bb56f2ee48a588d04e442a8c3cd93a7089dc08e",
+    "bytes": 133274437
+  }
+}

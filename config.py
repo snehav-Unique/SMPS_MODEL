@@ -13,12 +13,8 @@ from pathlib import Path
 # ─────────────────────────────────────────────────────────────────────────────
 # PATHS — Edit DATASET_ROOT to match your machine
 # ─────────────────────────────────────────────────────────────────────────────
-DATASET_ROOT = Path(
-    r"D:\RVCE\Sem 3\Deepfake ML Hackathon"
-    r"\Deepfake ML Hackathon - Participant Package-20261105T145705Z-1-001"
-    r"\Deepfake ML Hackathon - Participant Package"
-    r"\hackathon_dataset\hackathon_dataset"
-)
+PROJECT_ROOT = Path(__file__).resolve().parent
+DATASET_ROOT = Path(os.environ.get("SMPS_DATASET_ROOT", str(PROJECT_ROOT / "datasets" / "extracted" / "hackathon_dataset")))
 
 TRAIN_REAL_DIR  = DATASET_ROOT / "train" / "real"
 TRAIN_FAKE_DIR  = DATASET_ROOT / "train" / "fake"
@@ -26,7 +22,6 @@ TEST_DIR        = DATASET_ROOT / "test" / "images"
 TRAIN_META_CSV  = DATASET_ROOT / "train_metadata.csv"
 SAMPLE_SUB_CSV  = DATASET_ROOT / "sample_submission.csv"
 
-PROJECT_ROOT    = Path(__file__).resolve().parent
 DATA_DIR        = PROJECT_ROOT / "data"
 WEIGHTS_DIR     = PROJECT_ROOT / "weights"
 OUTPUTS_DIR     = PROJECT_ROOT / "outputs"

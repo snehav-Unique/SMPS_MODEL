@@ -1,0 +1,15 @@
+{
+  "original_files_retained": 268,
+  "original_output_files_byte_identical": 170,
+  "delivery_audit": "passed",
+  "python310_windows_binary_dependency_resolution": "passed",
+  "training_cli_and_augmentation_smoke_checks": "passed",
+  "colab_cached_asset_setup": "passed",
+  "colab_embedded_install_in_empty_directory": "passed",
+  "historical_t4_evidence_import": "passed",
+  "saved_original_blend": "passed",
+  "final_report_pages": 4,
+  "new_full_t4_replay": "not_run",
+  "clean_linux_install": "not_run",
+  "remote_publication_and_drive_upload": "not_performed"
+}

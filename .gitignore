@@ -21,6 +21,9 @@ Thumbs.db
 # Interrupted atomic writes
 *.tmp
 
+# Rendered PDF audit previews are reproducible local intermediates.
+tmp/pdfs/
+
 # Local-only debugging and backups.
 FINAL_STATUS_previous.md
 predictions_before_verified.csv

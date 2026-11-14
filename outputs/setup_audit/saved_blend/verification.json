@@ -1,0 +1,16 @@
+{
+  "saved_blend": {
+    "passed": true,
+    "max_probability_difference": 0.0,
+    "mean_probability_difference": 0.0,
+    "label_mismatches": 0,
+    "tolerance": 0,
+    "images": 3000
+  },
+  "weights_to_csv_status": "blocked",
+  "missing_weights": [],
+  "runs": [],
+  "reference_sha256": "7cf9a2b23d1af40737234016970bc85cb2436cf526ce980fcabfd6a69d32b34f",
+  "inference_sha256": "8ac9f93386c611b9530781617e9aa096b5d8361c8b607972eb501e0d79056e2d",
+  "reason": "Download LFS weights and provide --test-dir with all 3000 official images."
+}
