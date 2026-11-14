@@ -79,8 +79,8 @@ def build_pdf(output_path: str):
         'DocTitle',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=12,
-        leading=14.5,
+        fontSize=13,
+        leading=16,
         textColor=colors.white,
         alignment=1
     )
@@ -89,8 +89,8 @@ def build_pdf(output_path: str):
         'DocSubtitle',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=7.5,
-        leading=9.5,
+        fontSize=8.2,
+        leading=10.5,
         textColor=colors.HexColor("#E2E8F0"),
         alignment=1
     )
@@ -99,8 +99,8 @@ def build_pdf(output_path: str):
         'SectionH1',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=8.3,
-        leading=10.5,
+        fontSize=9.5,
+        leading=12.0,
         textColor=C_PRIMARY,
         spaceBefore=3.0,
         spaceAfter=1.5,
@@ -111,8 +111,8 @@ def build_pdf(output_path: str):
         'DocBody',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=6.8,
-        leading=8.7,
+        fontSize=8.0,
+        leading=10.2,
         textColor=C_TEXT,
         alignment=4,  # Justified
         spaceAfter=2.0
@@ -122,8 +122,8 @@ def build_pdf(output_path: str):
         'FigCaption',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=6.0,
-        leading=7.8,
+        fontSize=6.8,
+        leading=8.6,
         textColor=colors.HexColor("#4A5568"),
         alignment=1,
         spaceBefore=1.5,
@@ -134,8 +134,8 @@ def build_pdf(output_path: str):
         'TableHeader',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=6.4,
-        leading=7.6,
+        fontSize=7.0,
+        leading=8.4,
         textColor=colors.white,
         alignment=1
     )
@@ -144,8 +144,8 @@ def build_pdf(output_path: str):
         'TableCell',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=6.1,
-        leading=7.3,
+        fontSize=6.7,
+        leading=8.1,
         textColor=C_TEXT,
         alignment=0
     )
@@ -432,7 +432,7 @@ def build_pdf(output_path: str):
 
     cli_box_data = [
         [Paragraph(
-            "<font name='Courier' size='6.1' color='#1A365D'>"
+            "<font name='Courier' size='6.6' color='#1A365D'>"
             "# Standard Super-Ensemble Inference:<br/>"
             "python inference_script.py --test_dir ./test/images/ --weights weights/ensemble_config.json --output predictions.csv<br/>"
             "<br/>"
@@ -453,8 +453,8 @@ def build_pdf(output_path: str):
     story.append(t_cli)
     story.append(Spacer(1, 1.0))
     story.append(Paragraph(
-        "<font size='6.0' color='#4A5568'><b>Submission Package Checklist:</b> predictions.csv (3,000 test images), inference_script.py, requirements.txt, "
-        "report.pdf (this 2-page document), weights/ (all 5 binary checkpoints, ensemble_config.json, ONNX, and TensorFlow exports). All code reproduces predictions.csv identically.</font>",
+        "<font size='6.7' color='#4A5568'><b>Submission Package Checklist:</b> predictions.csv (3,000 test images), inference_script.py, requirements.txt, "
+        "report.pdf (this 2-page document), Explanatory Video.mp4, weights/ (all 5 binary checkpoints, ensemble_config.json, ONNX, and TensorFlow exports). All code reproduces predictions.csv identically.</font>",
         body_style
     ))
 
