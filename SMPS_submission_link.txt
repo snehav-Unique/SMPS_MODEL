@@ -1,0 +1,21 @@
+TEAM SMPS - DEEPFAKE ML HACKATHON SUBMISSION LINKS
+=====================================================
+
+Team Name: SMPS
+Track: Deepfake Face Classification (224x224)
+Institution: IIIT Bangalore ML Hackathon
+
+1. Google Drive Submission Link (Public Access):
+https://drive.google.com/file/d/1ZDmghfzombwnn16SxoqbPlso07iLo_aI/view?usp=sharing
+
+2. Official GitHub Code Repository:
+https://github.com/snehav-Unique/SMPS_MODEL
+
+Submitted Package (SMPS_submission.zip - 624 MB):
+- predictions.csv (3,000 test images, verified with 0 label mismatches on Tesla T4)
+- inference_script.py & ensemble_worker_control.py (matches inference_template.py)
+- report.pdf (2-page publication technical report)
+- Explanatory Video.mp4 (Complete solution walkthrough)
+- requirements.txt (Pinned dependencies)
+- weights/ (all 5 PyTorch .pth, ONNX, and TensorFlow exports)
+- results.html & README.md (Full documentation and offline verification dashboard)
